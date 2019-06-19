@@ -1,0 +1,5 @@
+torch
+nltk
+tqdm
+sklearn
+ipywidgets
