@@ -61,7 +61,7 @@ def save_checkpoint(filename, model, optimizer):
         }
     torch.save(state, filename)
 
-def load_checkpoint(filename, model, optimizer):
+def load_checkpoint(filename, model, optimizer, device):
     '''
     loads previous model
     :param filename: file name of model
@@ -70,8 +70,7 @@ def load_checkpoint(filename, model, optimizer):
     :return: loaded model, checkpoint
     '''
     if os.path.isfile(filename):
-        checkpoint = torch.load(filename)
-
+        checkpoint = torch.load(filename, map_location=device)
         model.load_state_dict(checkpoint['model'])
         optimizer.load_state_dict(checkpoint['optimizer'])
     return model, optimizer
@@ -90,30 +89,6 @@ def freeze_layer(layer, bool):
     layer.training = not bool
     return layer
 
-
-def encoder_accuracy(targets, predicted):
-    '''
-    finds the token level, and sentence level accuracy
-    :param targets: tensor of sentence
-    :param predicted: tensor of predicted senences
-    :return: sentence_accuracy, token_accuracy (float)
-    '''
-    batch_size = targets.size()
-    sentence_acc = [1] * batch_size[0]
-    token_acc = []
-    for batch in range(0, batch_size[0]):
-        for token in range(0, batch_size[1]):
-            if targets[batch, token] != 0:
-                if targets[batch, token] != predicted[batch, token]:
-                    sentence_acc[batch] = 0
-                    token_acc.append(0)
-                else:
-                    token_acc.append(1)
-
-    sentence_accuracy = sum(sentence_acc)/len(sentence_acc)
-    token_accuracy = sum(token_acc) / len(
-        token_acc)
-    return sentence_accuracy, token_accuracy
 
 def bleu(targets, predicted, n_grams=4):
     '''
