@@ -2,10 +2,10 @@ CISS Materials
 ==============
 
 Lectures:
- * [lectures/]([lectures/])
+ * [lectures/](lectures/)
 
 Tutorials:
- * [tutorials/]([tutorials/])
+ * [tutorials/](tutorials/)
 
 Materials:
  * [Project Ideas](project_ideas.md)
