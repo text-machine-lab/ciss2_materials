@@ -17,6 +17,8 @@ This page collects several ideas of possible projects to help you figure out wha
    - [Web-page](https://visualdialog.org/challenge/2018)
  - Visual Question Answering
    - [Web-page](https://visualqa.org/) 
+ - Generate discussions on current affairs (like two or more agents posting on a forum)
+   - You can start with this [Web-page](https://www.kaggle.com/aashita/training-a-bot-to-comment-on-current-affairs) 
 
 
 ## Be creative!
