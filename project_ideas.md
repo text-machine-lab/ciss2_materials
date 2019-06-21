@@ -27,3 +27,11 @@ Choose a project you would really like to work on but did not have time! Remembe
 
 \*According to Socher
 
+
+## Tips
+The tutorial sessions will show you how to do basic things, such as loading data, constructing a model, training and testing.
+Unless you are an advanced learner already, it may be a good idea to expand the code from the tutorials for your project.
+
+The dataset can be huge, and our time is limited. In early development, it may be wise to use a small subset of your training data. Do not make each development cycle hours long. 
+
+An innovative project may have an innovative task, or an innovative model, or both. Something is better than nothing. After you make things work, you will have more ideas and you can always add things on top of it.
