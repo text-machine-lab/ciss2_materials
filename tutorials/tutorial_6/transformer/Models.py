@@ -71,7 +71,6 @@ class Encoder(nn.Module):
             self.src_word_emb = nn.Embedding.from_pretrained(
                 pretrained_embeddings, padding_idx=Constants.PAD)
 
-        # idk about dis maa check it
         self.position_enc = nn.Embedding.from_pretrained(
             get_sinusoid_encoding_table(n_position, d_word_vec, padding_idx=0),
             freeze=True)
@@ -210,12 +209,24 @@ class Transformer(nn.Module):
             "To share word embedding table, the vocabulary size of src/tgt shall be the same."
             self.encoder.src_word_emb.weight = self.decoder.tgt_word_emb.weight
 
-    def forward(self, src_seq, src_pos, src_seg, tgt_seq, tgt_pos):
+    def forward(self, h_seq, h_pos, h_seg, r_seq, r_pos):
+        """
+        Takes in the input features for the history and response, and returns a prediction.
+        
+        First encodes the history, and then decodes it before mapping the output to the vocabulary
+        
+        Args:
+            h_seq : Encodings for the words in the history
+            h_pos : Positional encodings for the words in the history
+            h_seg : Segment encodings for turns in the history
+            r_seq : Encodings for the words in the target response
+            r_pos : Positional encodings for the words in the target response
+        """
+        
+        r_seq, r_pos = r_seq[:, :-1], r_pos[:, :-1]
 
-        tgt_seq, tgt_pos = tgt_seq[:, :-1], tgt_pos[:, :-1]
+        enc_output, *_ = self.encoder(h_seq, h_pos, h_seg)
+        dec_output, *_ = self.decoder(r_seq, r_pos, h_seq, enc_output)
+        outputs = self.tgt_word_prj(dec_output) * self.x_logit_scale
 
-        enc_output, *_ = self.encoder(src_seq, src_pos, src_seg)
-        dec_output, *_ = self.decoder(tgt_seq, tgt_pos, src_seq, enc_output)
-        seq_logit = self.tgt_word_prj(dec_output) * self.x_logit_scale
-
-        return seq_logit.view(-1, seq_logit.size(2))
+        return outputs.view(-1, seq_logit.size(2))
