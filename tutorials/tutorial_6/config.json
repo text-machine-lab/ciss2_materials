@@ -1,8 +1,7 @@
 {
   "dataset_filename": "data_small",
-  "output_dir": "exp_1/",
-  "run_name": "run_1/",
-  "old_model_dir": "run_5",
+  "output_dir": "run_1/",
+  "old_model_dir": "pretrained_model",
   "num_epochs":5,
   "history_len": 50,
   "response_len": 15,
