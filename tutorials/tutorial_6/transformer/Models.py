@@ -82,17 +82,28 @@ class Encoder(nn.Module):
             for _ in range(n_layers)])
 
     def forward(self, src_seq, src_pos, src_seg, return_attns=False):
-
+        """
+        First creates an imput embedding from the seq, pos, and seg encodings.
+        then runs the encoder layer for n_layers and returns the final vector
+        
+        Args:
+            h_seq: Encodings for the words in the history
+            h_pos: Positional encodings for the words in the history
+            h_seg: Segment encodings for turns in the history
+        Returns:
+            enc_output: vector output from encoder
+        """
         enc_slf_attn_list = []
 
         # -- Prepare masks
         slf_attn_mask = get_attn_key_pad_mask(seq_k=src_seq, seq_q=src_seq)
         non_pad_mask = get_non_pad_mask(src_seq)
 
-        # -- Forward
+        # -- Get input embeddings
         enc_output = self.src_word_emb(src_seq) + self.position_enc(src_pos) \
             + self.segment_enc(src_seg)
 
+        # Nx encoder layer
         for enc_layer in self.layer_stack:
             enc_output, enc_slf_attn = enc_layer(
                 enc_output,
@@ -133,7 +144,19 @@ class Decoder(nn.Module):
             for _ in range(n_layers)])
 
     def forward(self, tgt_seq, tgt_pos, src_seq, enc_output, return_attns=False):
-
+        """
+        Starts by getting the imput embedding from the target seq, and pos
+        encodings. Then runs the decoder.
+        
+        Args:
+            tgt_seq: Encodings for the words in the target response
+            tgt_pos: Positional encodings for the words in the target response
+            src_seq: Encodings for the words in the history
+            enc_output: Output from the Encoder 
+        Returns:
+            sec_output: vector outputs from decoder, one for each word in the response 
+            
+        """
         dec_slf_attn_list, dec_enc_attn_list = [], []
 
         # -- Prepare masks
@@ -148,6 +171,7 @@ class Decoder(nn.Module):
         # -- Forward
         dec_output = self.tgt_word_emb(tgt_seq) + self.position_enc(tgt_pos)
 
+        # Nx decoder layer
         for dec_layer in self.layer_stack:
             dec_output, dec_slf_attn, dec_enc_attn = dec_layer(
                 dec_output, enc_output,
@@ -216,11 +240,13 @@ class Transformer(nn.Module):
         First encodes the history, and then decodes it before mapping the output to the vocabulary
         
         Args:
-            h_seq : Encodings for the words in the history
-            h_pos : Positional encodings for the words in the history
-            h_seg : Segment encodings for turns in the history
-            r_seq : Encodings for the words in the target response
-            r_pos : Positional encodings for the words in the target response
+            h_seq: Encodings for the words in the history 
+            h_pos: Positional encodings for the words in the history 
+            h_seg: Segment encodings for turns in the history 
+            r_seq: Encodings for the words in the target response 
+            r_pos: Positional encodings for the words in the target response 
+        Returns:
+            Outputs: Vector of probabilities for each word in the vocabulary, for each word in the response 
         """
         
         r_seq, r_pos = r_seq[:, :-1], r_pos[:, :-1]

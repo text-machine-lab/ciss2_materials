@@ -15,10 +15,22 @@ class EncoderLayer(nn.Module):
         self.pos_ffn = PositionwiseFeedForward(d_model, d_inner, dropout=dropout)
 
     def forward(self, enc_input, non_pad_mask=None, slf_attn_mask=None):
+        """
+        First performs self attention on the input. then the result is passed
+        through a feed forward network to get the output
+
+        Args:
+            enc_input: vector input
+
+        Returns:
+            enc_output: vector output from encoder layer
+        """
+        # Multi-Head Attention (w/ Add and Norm)
         enc_output, enc_slf_attn = self.slf_attn(
             enc_input, enc_input, enc_input, mask=slf_attn_mask)
         enc_output *= non_pad_mask
 
+        # Feed forward (w/ Add and Norm)
         enc_output = self.pos_ffn(enc_output)
         enc_output *= non_pad_mask
 
@@ -35,14 +47,34 @@ class DecoderLayer(nn.Module):
         self.pos_ffn = PositionwiseFeedForward(d_model, d_inner, dropout=dropout)
 
     def forward(self, dec_input, enc_output, non_pad_mask=None, slf_attn_mask=None, dec_enc_attn_mask=None):
+        """
+        First performs masked self attention on input.
+
+        Then preforms attention
+        where the query is the output from the previous layer, and the keys
+        and values is the encoder output
+
+        finally, the result is passed through a feed forward network to get
+        the output
+
+        Args:
+            dec_input: input to the decoder
+            enc_output: output from encoder
+
+        Returns:
+            dec_output: output from decoder
+        """
+        # Masked Multi-Head Attention (w/ Add and Norm)
         dec_output, dec_slf_attn = self.slf_attn(
             dec_input, dec_input, dec_input, mask=slf_attn_mask)
         dec_output *= non_pad_mask
 
+        # Multi-Head Attention (w/ Add and Norm)
         dec_output, dec_enc_attn = self.enc_attn(
             dec_output, enc_output, enc_output, mask=dec_enc_attn_mask)
         dec_output *= non_pad_mask
 
+        # Feed forward (w/ Add and Norm)
         dec_output = self.pos_ffn(dec_output)
         dec_output *= non_pad_mask
 
