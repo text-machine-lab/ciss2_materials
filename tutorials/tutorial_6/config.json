@@ -2,7 +2,7 @@
   "dataset_filename": "data_small",
   "output_dir": "exp_1/",
   "run_name": "run_1/",
-  "old_model_dir": null,
+  "old_model_dir": "run_5",
   "num_epochs":5,
   "history_len": 50,
   "response_len": 15,
@@ -16,13 +16,14 @@
   "dropout": 0.3,
   "min_count": 1,
   "train_batch_size": 200,
-  "val_batch_size": 23,
+  "val_batch_size": 25,
   "warmup_steps": 4000,
   "a_nice_note": "baseline test",
   "label_smoothing": false,
   "train_len": 1999,
   "vocab_size": 11507,
   "device":"cpu",
-  "beam_size":5,
-  "n_best":1
+  "beam_size":4,
+  "n_best":4,
+  "choose_best":false
 }
