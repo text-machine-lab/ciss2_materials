@@ -89,8 +89,6 @@ class PositionwiseFeedForward(nn.Module):
         super().__init__()
         self.w_1 = nn.Conv1d(d_in, d_hid, 1) # position-wise
         self.w_2 = nn.Conv1d(d_hid, d_in, 1) # position-wise
-        #self.w_1 = nn.Linear(d_in, d_hid)
-        #self.w_2 = nn.Linear(d_hid, d_in)
         self.layer_norm = nn.LayerNorm(d_in)
         self.dropout = nn.Dropout(dropout)
 
