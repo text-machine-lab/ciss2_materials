@@ -27,6 +27,13 @@ Choose a project you would really like to work on but did not have time! Remembe
 
 \*According to Socher
 
+## Datasets
+
+Below is a list of datasets that you can use in your projects:
+
+ https://docs.google.com/document/d/1QVVX0YV5_ebH5M9XUtT7VveD0v2wVQy69DeKkWqhcz4/edit?usp=drivesdk
+ 
+
 
 ## Tips
 The tutorial sessions will show you how to do basic things, such as loading data, constructing a model, training and testing.
