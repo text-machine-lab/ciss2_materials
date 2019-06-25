@@ -4,3 +4,4 @@
 
 2. Tutorial 2. Sentence classification with word embeddings: https://colab.research.google.com/drive/1Dnr3wC3FBf4KS0GOVNlEbp5fg74f0FM1
 
+3. Tutorial 3. Sequence to sequence: https://colab.research.google.com/drive/135BsS9VWUgIHwfTviKgFWRuBvMDHJAjD
