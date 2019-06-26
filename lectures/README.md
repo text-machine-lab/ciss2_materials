@@ -4,7 +4,7 @@
   
   * [Lecture 2: Representing words](https://docs.google.com/presentation/d/12MFFqeaMw8uaME_eqVjx9Ua29V8HoG1GhOSpJ_Y0nP4/edit?usp=sharing)
 
-  * [Invited talk: Alexander Rush, Conditional Text Generation and Pretraining](Alexander%20Rush.%20Conditional%20Text%20Generation%20and%20Pretraining.pdf)
+  * Invited talk: Alexander Rush, Conditional Text Generation and Pretraining. [Slides](Alexander%20Rush.%20Conditional%20Text%20Generation%20and%20Pretraining.pdf), [video](https://uml.mediasite.com/Mediasite/Play/9b77f879b01a4679a5122f109957506d1d) (participants will receive the password via email).
 
 ## Day 2
 [lectures video](https://echo360.org/lesson/fd9e1cec-bcc9-4b7e-a627-69a5e6a41f48/classroom)
