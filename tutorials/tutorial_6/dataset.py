@@ -7,6 +7,7 @@ import csv
 import json
 from transformer import Constants
 
+# get history, respinse data from csv file
 def _read_file(filename):
     history = list()
     response = list()
@@ -27,11 +28,13 @@ def _read_file(filename):
 
 
 class Vocab(object):
+
     def __init__(self, special_tokens=None):
         super(Vocab, self).__init__()
 
         self.nb_tokens = 0
 
+        # vocab mapping
         self.token2id = {}
         self.id2token = {}
 
@@ -42,6 +45,7 @@ class Vocab(object):
             self.special_tokens = special_tokens
             self.add_document(self.special_tokens)
 
+    # updates the vocab with an example
     def add_document(self, document):
         for token in document:
             self.token_counts[token] += 1
@@ -55,6 +59,7 @@ class Vocab(object):
         for doc in documents:
             self.add_document(doc)
 
+    # prune the vocab that occur less than the min count
     def prune_vocab(self, min_count=2):
         nb_tokens_before = len(self.token2id)
 
@@ -70,12 +75,14 @@ class Vocab(object):
 
         print('Vocab pruned: {} -> {}'.format(nb_tokens_before, self.nb_tokens))
 
+    # load token2id from json file, useful when using pretrained model
     def load_from_dict(self, filename):
         with open(filename, 'r') as f:
             self.token2id = json.load(f)
         self.id2token = {i: t for t, i in self.token2id.items()}
         self.nb_tokens = len(self.token2id)
 
+    # Save token2id to json file
     def save_to_dict(self, filename):
         with open(filename, 'w') as f:
             json.dump(self.token2id, f)
@@ -100,13 +107,32 @@ class DialogueDataset(torch.utils.data.Dataset):
     EOS_WORD = '</s>'
     CLS_WORD = '<cls>'
 
-    def __init__(self, filename, history_len = 250, response_len=30, vocab=None, update_vocab=True):
+    def __init__(self, filename, history_len = 50, response_len=15, vocab=None, update_vocab=True):
+        """
+        Initialize the dialogue dataset.
+
+        Get examples, and create/update vocab
+
+        Examples:
+            History: <cls> hello ! <s> hi , how are you ? </s>
+            Resoponse: <cls> i am good , thank you ! </s>
+
+        Args:
+            filename: Filename of csv file with the data
+            history_len: Maximum token length for the history. Will be
+                pruned/padded to this length
+            response_len: Maximum length for the response.
+            vocab: Optional vocab object to use for this dataset
+            update_vocab: Set to false to not update the vocab with the new
+                examples
+        """
         self.history, self.response, self.ids = _read_file(filename)
 
         self.history_len = history_len
         self.response_len = response_len
 
         if vocab is None:
+            # Create new vocab object
             self.vocab = Vocab(special_tokens=[DialogueDataset.PAD_WORD,
                                                DialogueDataset.UNK_WORD,
                                                DialogueDataset.SEP_WORD,
@@ -121,6 +147,25 @@ class DialogueDataset(torch.utils.data.Dataset):
             self.vocab.add_documents(self.response)
 
     def _process_history(self, history):
+        """
+        creates token encodings for the word embeddings, positional encodings,
+        and segment encodings for the dialogue history
+
+        Examples:
+            History: <cls> hello ! <s> hi , how are you ? </s>
+            self.history_len = 15
+
+            h_seq = np.array([4, 34, 65, 2, 23, 44, 455, 97, 56, 10, 3, 0, 0, 0, 0])
+            h_pos = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 0, 0, 0, 0)]
+            h_seg = np.array([1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0)]
+
+        Args:
+            history: list of tokens in the history
+        Returns:
+            h_seq: token encodings for the history
+            h_pos: positional encoding for the history
+            h_seg: segment encoding for the history
+        """
         history = history[-self.history_len+1:]
         history.append(DialogueDataset.EOS_WORD)
 
@@ -149,11 +194,28 @@ class DialogueDataset(torch.utils.data.Dataset):
         seg += [0] * needed_pads
         seg = np.array(seg, dtype=np.long)
 
-        history = np.array(history, dtype=np.long)
+        h_seq = np.array(history, dtype=np.long)
 
-        return (history, pos, seg)
+        return h_seq, h_pos, h_seg
 
     def _process_response(self, response):
+        """
+        creates token encodings for the word embeddings, and positional
+            encodings for the response
+
+        Examples:
+            History:  <cls> i am good , thank you ! </s>
+            self.response_len = 10
+
+            h_seq = np.array([4, 43, 52, 77, 9, 65, 93, 5,  3, 0])
+            h_pos = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 0,)]
+
+        Args:
+            history: list of tokens in the history
+        Returns:
+            r_seq: token encodings for the response
+            r_pos: positional encoding for the response
+        """
         response = response[:self.response_len - 1]
         response.append(DialogueDataset.EOS_WORD)
         #response.insert(0, DialogueDataset.CLS_WORD)
@@ -167,26 +229,29 @@ class DialogueDataset(torch.utils.data.Dataset):
             for token in response
         ]
         # create position embeddings
-        pos = np.array([pos_i + 1 if w_i != 0 else 0
+        r_pos = np.array([pos_i + 1 if w_i != 0 else 0
                         for pos_i, w_i in enumerate(response)])
-        response = np.array(response, dtype=np.long)
-        return (response, pos)
-    
-    def get_input_features(self, history):
-        tokenizer = TweetTokenizer()
-        all_history = list()
-        all_history.append(DialogueDataset.CLS_WORD)
-        for line in history:
-            all_history+=list(tokenizer.tokenize(line))
-            all_history.append(DialogueDataset.SEP_WORD)
-        examples = self._process_history(all_history[:-1])
-        return torch.from_numpy(examples[0]).unsqueeze(0), torch.from_numpy(examples[1]).unsqueeze(0), torch.from_numpy(examples[2]).unsqueeze(0)
+        r_seq = np.array(response, dtype=np.long)
+        return r_seq, r_pos
 
     def __getitem__(self, index):
-        history = self._process_history(self.history[index])
+        """
+            returns the features for an example in the dataset
+
+        Args:
+            index: index of example in dataset
+
+        Returns:
+            h_seq: token encodings for the history
+            h_pos: positional encoding for the history
+            h_seg: segment encoding for the history
+            r_seq: token encodings for the response
+            r_pos: positional encoding for the response
+        """
+        h_seq, h_pos, h_seg = self._process_history(self.history[index])
         response = self._process_response(self.response[index])
         id = self.ids[index]
-        return history[0], history[1], history[2], response[0], response[1]
+        return h_seq, h_pos, h_seg, r_seq, r_pos
 
     def __len__(self):
         return len(self.history)
