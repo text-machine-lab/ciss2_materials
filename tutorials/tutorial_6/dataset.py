@@ -249,7 +249,7 @@ class DialogueDataset(torch.utils.data.Dataset):
             r_pos: positional encoding for the response
         """
         h_seq, h_pos, h_seg = self._process_history(self.history[index])
-        response = self._process_response(self.response[index])
+        r_seg, r_pos = self._process_response(self.response[index])
         id = self.ids[index]
         return h_seq, h_pos, h_seg, r_seq, r_pos
 
