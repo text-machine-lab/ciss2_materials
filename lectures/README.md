@@ -10,3 +10,4 @@
 
   * [Lecture 4: Recurrent Neural Networks](https://docs.google.com/presentation/d/1FRWbtzmaSj-adKm_QLRYZntI6BJYrgcnTYxhP-O2hJY/edit?usp=sharing)
 
+  * [Lecture 6: Contextualized embeddings: ELMo, GPT, BERT](https://docs.google.com/presentation/d/14dsuG-btGgvQ6IUF2ZNRjRZ9qma1oQCUrVuFcn5vVAw/edit?usp=sharing)
