@@ -204,14 +204,14 @@ class DialogueDataset(torch.utils.data.Dataset):
             encodings for the response
 
         Examples:
-            History:  <cls> i am good , thank you ! </s>
+            Response:  <cls> i am good , thank you ! </s>
             self.response_len = 10
 
-            h_seq = np.array([4, 43, 52, 77, 9, 65, 93, 5,  3, 0])
-            h_pos = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 0,)]
+            r_seq = np.array([4, 43, 52, 77, 9, 65, 93, 5,  3, 0])
+            r_pos = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 0,)]
 
         Args:
-            history: list of tokens in the history
+            response: list of tokens in the response
         Returns:
             r_seq: token encodings for the response
             r_pos: positional encoding for the response
