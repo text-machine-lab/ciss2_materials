@@ -10,4 +10,8 @@
 
   * [Lecture 4: Recurrent Neural Networks](https://docs.google.com/presentation/d/1FRWbtzmaSj-adKm_QLRYZntI6BJYrgcnTYxhP-O2hJY/edit?usp=sharing)
 
+  * [Lecture 4 and 3/4: Attention: A Quick Recap](https://docs.google.com/presentation/d/1_PLMA-c_hSs_0tS10yVU1kX4N6gLMXmy6vZCE8chWEk/edit?usp=sharing)
+
+  * [Lecture 5: Attention-based architectures: Transformer](https://docs.google.com/presentation/d/1cg18KSHtgtkewC5srMuRTGuFL8k3rmaweuwlINSLXbs/edit?usp=sharing)
+
   * [Lecture 6: Contextualized embeddings: ELMo, GPT, BERT](https://docs.google.com/presentation/d/14dsuG-btGgvQ6IUF2ZNRjRZ9qma1oQCUrVuFcn5vVAw/edit?usp=sharing)
