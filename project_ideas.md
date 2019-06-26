@@ -9,8 +9,10 @@ This page collects several ideas of possible projects to help you figure out wha
    - This [huggingface/pytorch-pretrained-BERT](https://github.com/huggingface/pytorch-pretrained-BERT) repository contains several Transformer-based models that you can use.
  - HRED-based sequence-to-sequence architecture
    - There is a PyTorch implmentation of [HRED](https://github.com/hsgodhia/hred)
- - A chat-not with personification
-   - Emotions and emojis 🙈
+ - A chat-bot with personification
+   - [How to build a State-of-the-Art Conversational AI with Transfer Learning](https://medium.com/huggingface/how-to-build-a-state-of-the-art-conversational-ai-with-transfer-learning-2d818ac26313)
+ - Emotions and emojis 🙈
+     - [Understanding emotions — from Keras to pyTorch](https://medium.com/huggingface/understanding-emotions-from-keras-to-pytorch-3ccb61d5a983)
  - Dialog State Tracking Challenge 
    - [Web-page](https://www.microsoft.com/en-us/research/event/dialog-state-tracking-challenge/)
  - Visual Dialog Challenge
@@ -26,6 +28,13 @@ This page collects several ideas of possible projects to help you figure out wha
 Choose a project you would really like to work on but did not have time! Remember, anything* can be framed as a question answering task, and, furthermore, as a dialog!
 
 \*According to Socher
+
+## Datasets
+
+Below is a list of datasets that you can use in your projects:
+
+ https://docs.google.com/document/d/1QVVX0YV5_ebH5M9XUtT7VveD0v2wVQy69DeKkWqhcz4/edit?usp=drivesdk
+ 
 
 
 ## Tips
