@@ -7,12 +7,14 @@
   * Invited talk: Alexander Rush, Conditional Text Generation and Pretraining. [Slides](Alexander%20Rush.%20Conditional%20Text%20Generation%20and%20Pretraining.pdf), [video](https://uml.mediasite.com/Mediasite/Play/9b77f879b01a4679a5122f109957506d1d) (participants will receive the password via email).
 
 ## Day 2
-[lectures video](https://echo360.org/lesson/fd9e1cec-bcc9-4b7e-a627-69a5e6a41f48/classroom)
+[Lectures video](https://echo360.org/lesson/fd9e1cec-bcc9-4b7e-a627-69a5e6a41f48/classroom)
   * [Lecture 3: Convolutional Neural Networks](https://docs.google.com/presentation/d/1G60Wv4eEpcouO2848A-8KxDAz4C7-mS1BpsEg2msKsk/edit?usp=sharing)
 
   * [Lecture 4: Recurrent Neural Networks](https://docs.google.com/presentation/d/1FRWbtzmaSj-adKm_QLRYZntI6BJYrgcnTYxhP-O2hJY/edit?usp=sharing)
 
   * [Lecture 4 and 3/4: Attention: A Quick Recap](https://docs.google.com/presentation/d/1_PLMA-c_hSs_0tS10yVU1kX4N6gLMXmy6vZCE8chWEk/edit?usp=sharing)
+
+  * Invited talk: João Sedoc, Evaluating Conversational Agents. [Slides](Joao%20Sedoc.%20Evaluating%20Conversational%20Agents.pdf).
 
 ## Day 3
 
