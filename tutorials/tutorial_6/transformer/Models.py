@@ -255,4 +255,4 @@ class Transformer(nn.Module):
         dec_output, *_ = self.decoder(tgt_seq, tgt_pos, src_seq, enc_output)
         outputs = self.tgt_word_prj(dec_output) * self.x_logit_scale
 
-        return outputs.view(-1, seq_logit.size(2))
+        return outputs.view(-1, outputs.size(2))

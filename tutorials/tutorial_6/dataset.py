@@ -179,7 +179,7 @@ class DialogueDataset(torch.utils.data.Dataset):
         ]
 
         # create position embeddings, make zero if it is the pad token (0)
-        pos = np.array([pos_i+1 if w_i != 0 else 0
+        h_pos = np.array([pos_i+1 if w_i != 0 else 0
             for pos_i, w_i in enumerate(history)])
 
         #create segment embeddings
@@ -192,7 +192,7 @@ class DialogueDataset(torch.utils.data.Dataset):
             if token == self.vocab[DialogueDataset.SEP_WORD]:
                 i+=1
         seg += [0] * needed_pads
-        seg = np.array(seg, dtype=np.long)
+        h_seg = np.array(seg, dtype=np.long)
 
         h_seq = np.array(history, dtype=np.long)
 
@@ -233,6 +233,17 @@ class DialogueDataset(torch.utils.data.Dataset):
                         for pos_i, w_i in enumerate(response)])
         r_seq = np.array(response, dtype=np.long)
         return r_seq, r_pos
+    
+    def get_input_features(self, history):
+        """ get features for chatbot """
+        tokenizer = TweetTokenizer()
+        all_history = list()
+        all_history.append(DialogueDataset.CLS_WORD)
+        for line in history:
+            all_history+=list(tokenizer.tokenize(line))
+            all_history.append(DialogueDataset.SEP_WORD)
+        h_seq, h_pos, h_seg = self._process_history(all_history[:-1])
+        return torch.from_numpy(h_seq).unsqueeze(0), torch.from_numpy(h_pos).unsqueeze(0), torch.from_numpy(h_seg).unsqueeze(0)
 
     def __getitem__(self, index):
         """
@@ -249,7 +260,7 @@ class DialogueDataset(torch.utils.data.Dataset):
             r_pos: positional encoding for the response
         """
         h_seq, h_pos, h_seg = self._process_history(self.history[index])
-        r_seg, r_pos = self._process_response(self.response[index])
+        r_seq, r_pos = self._process_response(self.response[index])
         id = self.ids[index]
         return h_seq, h_pos, h_seg, r_seq, r_pos
 
