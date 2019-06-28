@@ -26,4 +26,8 @@
 
   * [Lecture 10: Multi-skill conversational agents](https://docs.google.com/presentation/d/1vp_-V_Qe9HmA0j_yHw11X0Fg0vC0BVvSCiUcEqETk8Y/edit?usp=sharing)
 
+  * [Lecture 11: Hierarchy in neural dialogue models](https://docs.google.com/presentation/d/1qQT3ihVJtHyczyJnKZSVxHl8CK-lq2TKF6wuqPR-NDM/edit?usp=sharing)
+
+  * [Lecture 12: Dialogue diversity](https://docs.google.com/presentation/d/1qQT3ihVJtHyczyJnKZSVxHl8CK-lq2TKF6wuqPR-NDM/edit?usp=sharing)
+
 
