@@ -9,3 +9,5 @@
 4. Tutorial 4. [Fine Tuning BERT](https://colab.research.google.com/github/text-machine-lab/ciss2_materials/blob/master/tutorials/deeppavlov_track/Tutorial_Day_3_Fine_Tuning_BERT.ipynb)
 
 5. Tutorial 5. [Transformer BERT for text generation](https://colab.research.google.com/github/text-machine-lab/ciss2_materials/blob/master/tutorials/deeppavlov_track/Tutorial_Day_4_Transformer_BERT_text_generation.ipynb)
+
+6. Tutorial 6. [Serving with DeepPavlov](https://colab.research.google.com/github/text-machine-lab/ciss2_materials/blob/master/tutorials/deeppavlov_track/Tutorial_Day_5_Serving_with_DeepPavlov.ipynb)
