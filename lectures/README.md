@@ -21,3 +21,9 @@
   * [Lecture 5: Attention-based architectures: Transformer](https://docs.google.com/presentation/d/1cg18KSHtgtkewC5srMuRTGuFL8k3rmaweuwlINSLXbs/edit?usp=sharing)
 
   * [Lecture 6: Contextualized embeddings: ELMo, GPT, BERT](https://docs.google.com/presentation/d/14dsuG-btGgvQ6IUF2ZNRjRZ9qma1oQCUrVuFcn5vVAw/edit?usp=sharing)
+
+## Day 5
+
+  * [Lecture 10: Multi-skill conversational agents](https://docs.google.com/presentation/d/1vp_-V_Qe9HmA0j_yHw11X0Fg0vC0BVvSCiUcEqETk8Y/edit?usp=sharing)
+
+
