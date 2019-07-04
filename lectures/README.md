@@ -20,7 +20,7 @@
 
   * Lecture 6: Contextualized embeddings: ELMo, GPT, BERT ([slides](https://docs.google.com/presentation/d/14dsuG-btGgvQ6IUF2ZNRjRZ9qma1oQCUrVuFcn5vVAw/edit?usp=sharing), [video](https://echo360.org/media/c986c7eb-f8da-4720-8e63-d4913c2fdb12/public))
 
-  * Invited talk: Kate Saenko ([video](https://echo360.org/media/436cb96f-5585-4c20-82ff-89cd8d093490/public))
+  * Invited talk: Kate Saenko ([slides](https://drive.google.com/file/d/1G6DXv5JHtrvpuJtxbDLUJuKBrm6vJT8a/view?usp=drive_web), [video](https://echo360.org/media/436cb96f-5585-4c20-82ff-89cd8d093490/public))
 
 ## Day 4
 
