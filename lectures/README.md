@@ -20,7 +20,7 @@
 
   * Lecture 6: Contextualized embeddings: ELMo, GPT, BERT ([slides](https://docs.google.com/presentation/d/14dsuG-btGgvQ6IUF2ZNRjRZ9qma1oQCUrVuFcn5vVAw/edit?usp=sharing), [video](https://echo360.org/media/c986c7eb-f8da-4720-8e63-d4913c2fdb12/public))
 
-  * Invited talk: Kate Saenko ([slides](https://drive.google.com/file/d/1G6DXv5JHtrvpuJtxbDLUJuKBrm6vJT8a/view?usp=drive_web), [video](https://echo360.org/media/436cb96f-5585-4c20-82ff-89cd8d093490/public))
+  * Invited talk: Kate Saenko, Grounding Language in Pixels ([slides](https://drive.google.com/file/d/1G6DXv5JHtrvpuJtxbDLUJuKBrm6vJT8a/view?usp=drive_web), [video](https://echo360.org/media/436cb96f-5585-4c20-82ff-89cd8d093490/public))
 
 ## Day 4
 
@@ -29,10 +29,10 @@
 
 ## Day 5
 
-  * Lecture 10: Multi-skill conversational agents ([slides](https://docs.google.com/presentation/d/1vp_-V_Qe9HmA0j_yHw11X0Fg0vC0BVvSCiUcEqETk8Y/edit?usp=sharing))
+  * Lecture 10: Multi-skill conversational agents ([slides](https://docs.google.com/presentation/d/1vp_-V_Qe9HmA0j_yHw11X0Fg0vC0BVvSCiUcEqETk8Y/edit?usp=sharing), [video](https://echo360.org/media/17cf25aa-a82d-4159-b4a4-76eadf1f7715/public))
 
-  * Lecture 11: Hierarchy in neural dialogue models ([slides](https://docs.google.com/presentation/d/1qQT3ihVJtHyczyJnKZSVxHl8CK-lq2TKF6wuqPR-NDM/edit?usp=sharing))
+  * Lecture 11: Hierarchy in neural dialogue models ([slides](https://docs.google.com/presentation/d/1qQT3ihVJtHyczyJnKZSVxHl8CK-lq2TKF6wuqPR-NDM/edit?usp=sharing), [video](https://echo360.org/media/f15053bb-1ce6-4762-b72e-833c3e120ab3/public))
 
-  * Lecture 12: Dialogue diversity([slides](https://docs.google.com/presentation/d/1qQT3ihVJtHyczyJnKZSVxHl8CK-lq2TKF6wuqPR-NDM/edit?usp=sharing))
+  * Lecture 12: Dialogue diversity([slides](https://docs.google.com/presentation/d/1qQT3ihVJtHyczyJnKZSVxHl8CK-lq2TKF6wuqPR-NDM/edit?usp=sharing), [video](https://echo360.org/media/e08a929d-e75c-4212-a635-f9b109fa825b/public))
 
-
+  * Invited talk: Jason Weston, Putting Together the Threads of Conversational AI? ([video](https://echo360.org/media/55668c92-97cc-44a5-acac-354dc383c840/public))
