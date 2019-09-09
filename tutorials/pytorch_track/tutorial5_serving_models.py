@@ -22,12 +22,19 @@ from flask import Flask, render_template, request, jsonify, Response
 ### CODE BELOW IS COPIED FROM THE NOTEBOOK ###
 
 class Vocab(object):
+    """Vocabulary class to provide token to id correpondance"""
     END_TOKEN = '<end>'
     START_TOKEN = '<start>'
     PAD_TOKEN = '<pad>'
     UNK_TOKEN = '<unk>'
 
     def __init__(self, special_tokens=None):
+        """
+        Initialize the vocabulary class
+
+        :param special_tokens: Default value = None) A list of special tokens. The PAD token should be the first in the list, if used.
+
+        """
         super().__init__()
 
         self.special_tokens = special_tokens
@@ -41,6 +48,13 @@ class Vocab(object):
             self.add_document(self.special_tokens)
 
     def add_document(self, document, rebuild=True):
+        """
+        Process the document and add tokens from the it to the vocabulary
+
+        :param document: A list of tokens in the document
+        :param rebuild: Default value = True) Whether to rebuild the token2id correspondance or not
+
+        """
         for token in document:
             self.token_counts[token] += 1
 
@@ -51,53 +65,64 @@ class Vocab(object):
             self._rebuild_id2token()
 
     def add_documents(self, documents):
+        """
+        Process a list of documents and tokens from the them to the vocabulary
+
+        :param documents: A list of documents, where each document is a list of tokens
+
+        """
         for doc in documents:
             self.add_document(doc, rebuild=False)
 
         self._rebuild_id2token()
 
-    def prune_vocab(self, max_size):
-        nb_tokens_before = len(self.token2id)
-
-        tokens_all = set(self.token2id.keys())
-        tokens_special = set(self.special_tokens)
-        tokens_most_common = set(t for t, c in self.token_counts.most_common(max_size)) - tokens_special
-        tokens_to_delete = tokens_all - tokens_most_common - tokens_special
-
-        for token in tokens_to_delete:
-            self.token_counts.pop(token)
-
-        self.token2id = {}
-        for i, token in enumerate(self.special_tokens):
-            self.token2id[token] = i
-        for i, token in enumerate(tokens_most_common):
-            self.token2id[token] = i + len(self.special_tokens)
-
-        self._rebuild_id2token()
-
-        nb_tokens_after = len(self.token2id)
-
-        print(f'Vocab pruned: {nb_tokens_before} -> {nb_tokens_after}')
-
     def _rebuild_id2token(self):
+        """Revuild the token to id correspondance"""
         self.id2token = {i: t for t, i in self.token2id.items()}
 
     def get(self, item, default=None):
+        """
+        Given a token, return the corresponding id
+
+        :param item: A token
+        :param default: Default value = None) Default value to return if token is not present in the vocabulary
+
+        """
         return self.token2id.get(item, default)
 
     def __getitem__(self, item):
+        """
+        Given a token, return the corresponding id
+
+        :param item: A token
+
+        """
         return self.token2id[item]
 
     def __contains__(self, item):
+        """
+        Check if a token is present in the vocabulary
+
+        :param item: A token
+
+        """
         return item in self.token2id
 
     def __len__(self):
+        """ """
         return len(self.token2id)
 
     def __str__(self):
+        """Get a string representation of the vocabulary"""
         return f'{len(self)} tokens'
 
     def save(self, filename):
+        """
+        Save the vocabulary to a csv file. See the `load` method.
+
+        :param filename: Path the file
+
+        """
         with open(filename, 'w') as csv_file:
             writer = csv.DictWriter(csv_file, fieldnames=['token', 'counts', 'is_special'])
             writer.writeheader()
@@ -108,6 +133,12 @@ class Vocab(object):
 
     @staticmethod
     def load(filename):
+        """
+        Load the vocabulary from a csv file. See the `save` method.
+
+        :param filename: 
+
+        """
         with open(filename, 'r') as csv_file:
             token2id = {}
             tokens_counts = {}
@@ -129,7 +160,18 @@ class Vocab(object):
 
 
 class SubtitlesDialogDataset(torch.utils.data.Dataset):
-    def __init__(self, filename, vocab=None, max_lines=1000, max_len=50, max_vocab_size=50000):
+    """ A conversational dialog dataset with query-response pairs  """
+    def __init__(self, filename, vocab=None, max_lines = 1000, max_len=50, max_vocab_size=50000):
+        """
+        Initialize a conversational dialog dataset with query-response pairs        
+
+        :param filename: Path to the OpenSubstitles dataset
+        :param vocab:  (Default value = None) Vocabulary, will be created if None
+        :param max_lines:  (Default value = 1000) Limit the number of lines to read from the dataset file
+        :param max_len:  (Default value = 50) Maximum length of the sentences
+        :param max_vocab_size:  (Default value = 50000) Maximum size of the vocabulary
+
+        """
 
         self.lines = []
         with gzip.open(filename, 'rb') as f:
@@ -137,10 +179,11 @@ class SubtitlesDialogDataset(torch.utils.data.Dataset):
                 if i >= max_lines:
                     break
 
-                self.lines.append(word_tokenize(line.decode('utf-8')))
+                tokens = word_tokenize(line.decode('utf-8'))
+                self.lines.append(tokens)
 
         self.max_lines = min(len(self.lines), max_lines)
-
+                
         if vocab is None:
             vocab = Vocab(special_tokens=[Vocab.PAD_TOKEN, Vocab.START_TOKEN, Vocab.END_TOKEN, Vocab.UNK_TOKEN])
             vocab.add_documents(self.lines)
@@ -148,41 +191,70 @@ class SubtitlesDialogDataset(torch.utils.data.Dataset):
 
             print(f'Created vocab: {vocab}')
 
+            
         if max_len is None:
             max_len = max(len(s) for s in itertools.chain.from_iterable(self.sentences))
             print(f'Calculed max len: {max_len}')
-
+        
         self.vocab = vocab
         self.max_len = max_len
-
+        
     def _pad_sentnece(self, sent):
-        sent = sent[:self.max_len - 1] + [Vocab.END_TOKEN, ]
+        """
+        Cut the sentence if needed and pad it to the maximum len
 
+        :param sent: The input sentnece
+
+        """
+        sent = sent[:self.max_len - 1] + [Vocab.END_TOKEN,]
+        
         nb_pad = self.max_len - len(sent)
-        sent = sent + [Vocab.PAD_TOKEN, ] * nb_pad
-
+        sent = sent + [Vocab.PAD_TOKEN,] * nb_pad
+        
         return sent
-
+        
     def _process_sent(self, sent):
+        """
+        Cut, pad, and convert the sentence from tokens to indices using the vocabulary
+
+        :param sent: The input sentence
+
+        """
         sent = self._pad_sentnece(sent)
         sent = [self.vocab[t] if t in self.vocab else self.vocab[Vocab.UNK_TOKEN] for t in sent]
-
+        
         sent = np.array(sent, dtype=np.long)
         return sent
-
+        
     def __getitem__(self, index):
+        """
+        Create a pair of query-reponse using two consequtive lines in the dataset and return it
+
+        :param index: Index of the query line. The reponse is the next line.
+
+        """
         query = self.lines[index]
         response = self.lines[index+1]
-
+        
         query = self._process_sent(query)
-        response = self._process_sent(response)
-
+        response = self._process_sent(response)        
+        
         return query, response
-
+    
     def __len__(self):
+        """ Return the total length of the dataset """
         return self.max_lines - 1
 
 def softmax_masked(inputs, mask, dim=1, epsilon=0.000001):
+    """
+    Perform the softmas operation on a batch of masked sequences of different lengths
+
+    :param inputs: Input sequences, a 2d array of the shape (batch_size, max_seq_len)
+    :param mask: Mask, an array of 1 and 0
+    :param dim:  (Default value = 1) Dimension of the softmax operation
+    :param epsilon:  (Default value = 0.000001)
+
+    """
     inputs_exp = torch.exp(inputs)
     inputs_exp = inputs_exp * mask.float()
     inputs_exp_sum = inputs_exp.sum(dim=dim)
@@ -191,8 +263,24 @@ def softmax_masked(inputs, mask, dim=1, epsilon=0.000001):
     return inputs_attention
 
 class Seq2SeqAttentionModel(torch.nn.Module):
+    """ A more advanced GRU-based sequence-to-sequence model with attention """
     def __init__(self, vocab_size, embedding_size, hidden_size, teacher_forcing,
                  max_len,trainable_embeddings, start_index, end_index, pad_index, W_emb=None):
+        """
+        Initialize the model
+
+        :param vocab_size: The size of the vocabulary
+        :param embedding_size: Dimension of the embeddings
+        :param hidden_size: The size of the hidden layers, including GRU
+        :param teacher_forcing: The probability of teacher forcing
+        :param max_len: Maximum length of the sequences
+        :param trainable_embeddings: Whether the embedding layer will be trainable or frozen
+        :param start_index: Index of the START token in the vocabulary
+        :param end_index: Index of the END token in the vocabulary
+        :param pad_index: Index of the PAD token in the vocabulary
+        :param W_emb:  (Default value = None) Initial values of the embedding layer, a numpy array
+
+        """
 
         super().__init__()
 
@@ -220,6 +308,12 @@ class Seq2SeqAttentionModel(torch.nn.Module):
 
             
     def encode(self, inputs):
+        """
+        Encode input sentence and return the all hidden states and the input mask
+
+        :param inputs: The input sentence
+
+        """
         batch_size = inputs.size(0)
         inputs_mask = (inputs != self.pad_index).long()
         inputs_lengths = torch.sum(inputs_mask, dim=1)
@@ -227,11 +321,17 @@ class Seq2SeqAttentionModel(torch.nn.Module):
         inputs_emb = self.embedding(inputs)
         outputs, h = self.encoder(inputs_emb)
         
-#         h_last_hidden = outputs[np.arange(batch_size), inputs_lengths - 1]
-        
         return outputs, inputs_mask
     
     def decode(self, encoder_hiddens, inputs_mask, targets=None):
+        """
+        Decode the response given the all hidden states of the encoder
+
+        :param encoder_hiddens: Hidden states of the decoder
+        :param inputs_mask: Input mask
+        :param targets:  (Default value = None) True decoding targets to be used for teacher forcing
+
+        """
         batch_size = encoder_hiddens.size(0)
 
         outputs_logits = []
@@ -265,13 +365,28 @@ class Seq2SeqAttentionModel(torch.nn.Module):
         return outputs_logits
         
     def forward(self, inputs, targets=None):
+        """
+        Encode the input query and decode the response
+
+        :param inputs: The input sentence
+        :param targets:  (Default value = None) True decoding targets
+
+        """
         encoder_hiddens, inputs_mask = self.encode(inputs)
         outputs_logits = self.decode(encoder_hiddens, inputs_mask, targets)
 
         return outputs_logits
 
 def load_model(model_class, filename):
+    """
+    Create the model of the given class and load the checkpoint from the given file
+
+    :param model_class: Model class
+    :param filename: Path to the checkpoint
+
+    """
     def _map_location(storage, loc):
+        """ A utility function to load a trained on a GPU model to the CPU """
         return storage
 
     # load trained on GPU models to CPU
@@ -286,8 +401,14 @@ def load_model(model_class, filename):
 
     return model
 
-
 def generate_response(query):
+    """
+    Generate a response from the model for a given query. The model and the dataset will be taken from the app cache
+
+    :param query: Query to generate the response to
+
+    """
+
     if not isinstance(query, list):
         query = word_tokenize(query)
 
@@ -321,6 +442,7 @@ app.config.from_envvar('SEQ2SEQ_DIALOG_SETTINGS', silent=True)
 
 
 def init_dataset():
+    """ Initialize the dataset from the parameters in the app config and return it """
     dataset_filename = app.config['dataset_filename']
     vocab_filename = app.config['vocab_filename']
 
@@ -331,6 +453,7 @@ def init_dataset():
 
 
 def init_model():
+    """ Initialize the model from the parameters in the app config and return it """
     model_filename = app.config['model_filename']
     model = load_model(Seq2SeqAttentionModel, model_filename)
 
@@ -345,6 +468,7 @@ app_cache = dict(
 
 @app.route('/dialog/', methods=['GET'])
 def dialog():
+    """ Take the query from the GET parameter `query`, generate the reponse, and return a json object """
     query = request.args.get('query')
     response = generate_response(query)
 
