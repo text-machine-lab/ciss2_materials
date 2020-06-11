@@ -1,5 +1,5 @@
-CISS Materials
-==============
+CISS 2019 Materials
+===================
 
 Lectures:
  * [lectures/](lectures/)
